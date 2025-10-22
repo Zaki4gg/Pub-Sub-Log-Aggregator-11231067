@@ -19,16 +19,11 @@ setelah berhasil build lanjutkan run docker dengan:
 <br>akan muncul:
 INFO:     Application startup complete.
 <br>INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-
-Buka browser ke http://localhost:8080/docs
-
-Kamu akan lihat Swagger UI dengan endpoint:
-
-POST /publish
-
-GET /events
-
-GET /stats
+<br>Buka browser ke http://localhost:8080/docs
+<br>Kamu akan lihat Swagger UI dengan endpoint:
+<br> POST /publish
+<br> GET /events
+<br> GET /stats
 
 
 . 

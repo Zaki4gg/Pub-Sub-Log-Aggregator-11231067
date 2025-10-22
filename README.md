@@ -49,13 +49,13 @@ Buka browser ke http://localhost:8080/docs
 <br>Kamu akan lihat Swagger UI dengan endpoint:
 
 ### POST /publish
-<br> Menerima satu atau batch event dalam format JSON
+Menerima satu atau batch event dalam format JSON
 
 ### GET /events
-<br> Mengembalikan daftar event unik (bisa filter topic)
+Mengembalikan daftar event unik (bisa filter topic)
 
 ### GET /stats
-<br> Menampilkan statistik agregator: total, duplikat, uptime
+Menampilkan statistik agregator: total, duplikat, uptime
 
 
 . 

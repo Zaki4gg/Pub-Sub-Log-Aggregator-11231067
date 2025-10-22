@@ -11,19 +11,28 @@ Sistem berjalan lokal dalam container **Docker**, tanpa koneksi eksternal publik
 
 ### 1. Build Docker Image
 pada terminal vs code jalankan:
+
 docker build -t uts-aggregator .
 
 ### 2. Run Docker container
 setelah berhasil build lanjutkan run docker dengan:
+
 docker run -p 8080:8080 uts-aggregator
 
 akan muncul:
+
 INFO:     Application startup complete.
+
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+
 Buka browser ke http://localhost:8080/docs
+
 Kamu akan lihat Swagger UI dengan endpoint:
+
 POST /publish
+
 GET /events
+
 GET /stats
 
 

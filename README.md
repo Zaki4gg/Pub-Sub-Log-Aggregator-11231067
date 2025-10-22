@@ -11,19 +11,14 @@ Sistem berjalan lokal dalam container **Docker**, tanpa koneksi eksternal publik
 
 ### 1. Build Docker Image
 pada terminal vs code jalankan:
-
-docker build -t uts-aggregator .
+<br>docker build -t uts-aggregator .
 
 ### 2. Run Docker container
 setelah berhasil build lanjutkan run docker dengan:
-
-docker run -p 8080:8080 uts-aggregator
-
-akan muncul:
-
+<br>docker run -p 8080:8080 uts-aggregator
+<br>akan muncul:
 INFO:     Application startup complete.
-
-INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+<br>INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 
 Buka browser ke http://localhost:8080/docs
 

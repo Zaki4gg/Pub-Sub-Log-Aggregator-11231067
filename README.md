@@ -59,3 +59,71 @@ Menampilkan statistik agregator: total, duplikat, uptime
 
 
 . 
+
+### Mengirim Event 
+Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
+  "topic": "demo.logs",
+  "event_id": "evt001",
+  "timestamp": "2025-10-21T10:00:00Z",
+  "source": "demo_client",
+  "payload": { "msg": "event pertama" }
+}'
+
+### Duplikat Event
+Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
+  "topic": "demo.logs",
+  "event_id": "evt001",
+  "timestamp": "2025-10-21T10:00:00Z",
+  "source": "demo_client",
+  "payload": { "msg": "event duplikat" }
+}'
+
+### Cek Statistik 
+memeriksa statistik sistem menggunakan endpoint /stats.
+Invoke-RestMethod -Uri "http://localhost:8080/stats"
+
+### Cek Event 
+melihat event yang sudah tersimpan dengan endpoint /events.
+Invoke-RestMethod -Uri "http://localhost:8080/events?topic=demo.logs"
+
+Restart container
+docker ps
+docker restart my_app_container
+
+Write-Host "Menunggu 3 detik setelah restart..."
+Start-Sleep -Seconds 3
+
+Write-Host "Lanjut ke proses berikutnya..."
+
+Setelah container aktif kembali, saya kirim ulang event yang sama seperti sebelumnya
+Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
+  "topic": "demo.logs",
+  "event_id": "evt001",
+  "timestamp": "2025-10-21T10:00:00Z",
+  "source": "demo_client",
+  "payload": { "msg": "ulang setelah restart" }
+}'
+
+$events = @()
+
+# Buat 5000 event, dengan 20% duplikat
+for ($i = 1; $i -le 5000; $i++) {
+    $id = if ($i % 5 -eq 0) { "evt$($i - 1)" } else { "evt$i" }  # 20% duplikat
+    $events += @{
+        topic = "stress.logs"
+        event_id = $id
+        timestamp = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ssZ")
+        source = "stress_tester"
+        payload = @{ msg = "Event $i" }
+    }
+}
+
+# Convert ke JSON array
+$jsonBody = $events | ConvertTo-Json
+
+# Kirim ke /publish
+Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body $jsonBody
+
+
+### RUn Docker Compose
+docker compose up --build

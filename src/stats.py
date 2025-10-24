@@ -3,11 +3,15 @@ from datetime import datetime, timezone
 class Stats:
     def __init__(self):
         self.received = 0
+        self.unique_processed = 0
         self.duplicates = 0
         self.start_time = datetime.now(timezone.utc)
 
     def increment_received(self):
         self.received += 1
+
+    def inc_unique(self):
+        self.unique_processed += 1
 
     def increment_duplicate(self):
         self.duplicates += 1
@@ -16,6 +20,7 @@ class Stats:
         uptime = (datetime.now(timezone.utc) - self.start_time).total_seconds()
         return {
             "received": self.received,
+            "unique_processed": self.unique_processed,
             "duplicate_dropped": self.duplicates,
             "uptime": uptime
         }

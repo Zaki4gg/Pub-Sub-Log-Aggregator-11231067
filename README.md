@@ -95,7 +95,8 @@ Start-Sleep -Seconds 3
 
 Write-Host "Lanjut ke proses berikutnya..."
 
-Setelah container aktif kembali, saya kirim ulang event yang sama seperti sebelumnya
+### Setelah container aktif kembali, saya kirim ulang event yang sama seperti sebelumnya
+'''bash
 Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
   "topic": "demo.logs",
   "event_id": "evt001",
@@ -103,6 +104,7 @@ Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType
   "source": "demo_client",
   "payload": { "msg": "ulang setelah restart" }
 }'
+'''
 
 $events = @()
 

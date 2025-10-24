@@ -57,10 +57,10 @@ Mengembalikan daftar event unik (bisa filter topic)
 ### GET /stats
 Menampilkan statistik agregator: total, duplikat, uptime
 
+---
 
-. 
-
-### Mengirim Event 
+### Mengirim Event
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
   "topic": "demo.logs",
   "event_id": "evt001",
@@ -68,8 +68,10 @@ Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType
   "source": "demo_client",
   "payload": { "msg": "event pertama" }
 }'
+```
 
 ### Duplikat Event
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
   "topic": "demo.logs",
   "event_id": "evt001",
@@ -77,18 +79,23 @@ Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType
   "source": "demo_client",
   "payload": { "msg": "event duplikat" }
 }'
+```
 
 ### Cek Statistik 
 memeriksa statistik sistem menggunakan endpoint /stats.
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/stats"
+```
 
 ### Cek Event 
 melihat event yang sudah tersimpan dengan endpoint /events.
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/events?topic=demo.logs"
+```
 
 Restart container
 docker ps
-docker restart my_app_container
+docker restart <name container or id>
 
 Write-Host "Menunggu 3 detik setelah restart..."
 Start-Sleep -Seconds 3
@@ -96,7 +103,7 @@ Start-Sleep -Seconds 3
 Write-Host "Lanjut ke proses berikutnya..."
 
 ### Setelah container aktif kembali, saya kirim ulang event yang sama seperti sebelumnya
-'''bash
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body '{
   "topic": "demo.logs",
   "event_id": "evt001",
@@ -104,11 +111,15 @@ Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType
   "source": "demo_client",
   "payload": { "msg": "ulang setelah restart" }
 }'
-'''
+```
 
+## Buat 5000 event
+```powershell
 $events = @()
+```
 
-# Buat 5000 event, dengan 20% duplikat
+### Buat 5000 event, dengan 20% duplikat
+```powershell
 for ($i = 1; $i -le 5000; $i++) {
     $id = if ($i % 5 -eq 0) { "evt$($i - 1)" } else { "evt$i" }  # 20% duplikat
     $events += @{
@@ -119,13 +130,19 @@ for ($i = 1; $i -le 5000; $i++) {
         payload = @{ msg = "Event $i" }
     }
 }
+```
 
-# Convert ke JSON array
+### Convert ke JSON array
+```powershell
 $jsonBody = $events | ConvertTo-Json
+```
 
-# Kirim ke /publish
+### Kirim ke /publish
+```powershell
 Invoke-RestMethod -Uri "http://localhost:8080/publish" -Method Post -ContentType "application/json" -Body $jsonBody
+```
 
+---
 
-### RUn Docker Compose
+### Run Docker Compose
 docker compose up --build

@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  aggregator:
+    build: .
+    container_name: aggregator_uts_zaki
+    ports:
+      - "8080:8080"       
+    networks:
+      - internal_net
+    command: >
+      uvicorn src.main:app --host 0.0.0.0 --port 8080
+
+  publisher:
+    image: python:3.11-slim
+    container_name: publisher_service
+    depends_on:
+      - aggregator
+    networks:
+      - internal_net
+    command: >
+      sh -c "
+      pip install requests &&
+      python - <<'EOF'
+      import requests, time
+      time.sleep(3)
+      events = [
+          {
+              'topic': 'compose.logs',
+              'event_id': f'evt-{i}',
+              'timestamp': '2025-10-22T10:00:00Z',
+              'source': 'publisher',
+              'payload': {'msg': f'compose event {i}'}
+          }
+          for i in range(10)
+      ]
+      res = requests.post('http://aggregator:8080/publish', json=events)
+      print('Publisher sent events:', res.status_code)
+      print('Response:', res.text)
+      EOF
+      "
+
+networks:
+  internal_net:
+    driver: bridge
